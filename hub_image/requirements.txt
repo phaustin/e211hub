@@ -1,0 +1,6 @@
+dockerspawner
+jupyterhub-firstuseauthenticator
+jupyterhub-dummyauthenticator
+nbgitpuller>1.0
+
+
