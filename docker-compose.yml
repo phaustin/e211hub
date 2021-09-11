@@ -6,19 +6,30 @@ services:
     build:
       context: e211book_image
     container_name: e211book_sep11
+    depends_on: [base_image]
+    #command: tail -F anything
     labels:
       - "traefik.enable=false"
-      
+
+
+  base_image:
+    image: phaustin/base_image:sep11
+    build:
+      context: base_image
+    container_name: baseimage_sep11
+    labels:
+      - "traefik.enable=false"
+
 
   e211hub:
-    build: newhub_image
+    build: hub_image
     image: phaustin/e211hub_img:sep11
     container_name: e211hub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:e211hub.eoastest2.xyz"
+      - "traefik.frontend.rule=Host:hub.eoastest3.xyz"
       - "traefik.port=8000"
     restart: on-failure
     networks:

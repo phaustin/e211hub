@@ -2,7 +2,7 @@
 c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
 
 # launch with docker
-# c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
+c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 # c.JupyterHub.authenticator_class = 'firstuseauthenticator.FirstUseAuthenticator'
 # c.Authenticator.allowed_users = {'test1','test2','phil','aloeppky','fjones','cjohnson','czhang','hari'}
 c.Authenticator.admin_users = {'test1','test2','phil','aloeppky','fjones','cjohnson','czhang','hari'}
@@ -14,8 +14,9 @@ c.JupyterHub.hub_connect_ip = 'e211hub'
 
 # pick a docker image. This should have the same version of jupyterhub
 # in it as our Hub.
-# c.DockerSpawner.image = 'phaustin/basicbook:aug07'
-c.DockerSpawner.allowed_images = {'e211' : 'phaustin/e211book:sep11'}
+c.DockerSpawner.image = 'phaustin/e211book:sep11'
+# c.DockerSpawner.allowed_images = {'e211' : 'phaustin/e211book:sep11',
+#                                   'test' : 'phaustin/e211book:sep11'}
 notebook_dir = "/home/jovyan/work"
 c.DockerSpawner.notebook_dir = notebook_dir
 

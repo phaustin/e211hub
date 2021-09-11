@@ -16,7 +16,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${PWD}/traefik/config:/etc/traefik
     labels:
-      - "traefik.frontend.rule=Host:eoastest2.xyz;PathPrefixStrip:/traefik"
+      - "traefik.frontend.rule=Host:eoastest3.xyz;PathPrefixStrip:/traefik"
       - "traefik.port=8080"
     container_name: traefik
     restart: always

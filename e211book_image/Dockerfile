@@ -2,7 +2,7 @@ FROM phaustin/base_image:sep11
 
 USER ${NB_USER}
 
-# RUN mkdir -p ${HOME}/work/problem_solving
+RUN mkdir -p ${HOME}/work
 
 RUN echo "conda activate ${CONDA_ENV}" >> ${HOME}/.bashrc
 
