@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 # Master build file for pangeo images
-
+# https://github.com/pangeo-data/pangeo-docker-images/blob/master/base-image/Dockerfile
 # Run this section as root
 # try to keep conda version in sync with repo2docker
 # ========================
@@ -14,7 +14,6 @@ ENV CONDA_VERSION=4.9.2-4 \
     CONDA_DIR=/srv/conda
 
 ENV NB_PYTHON_PREFIX=${CONDA_DIR}/envs/${CONDA_ENV} \
-    DASK_ROOT_CONFIG=${CONDA_DIR}/etc \
     HOME=/home/${NB_USER} \
     PATH=${CONDA_DIR}/bin:${PATH}
 
@@ -59,8 +58,7 @@ RUN echo "Installing Miniforge..." \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 RUN echo "Copying configuration files..." \
-    && mv /srv/condarc.yml ${CONDA_DIR}/.condarc \
-    && mv /srv/dask_config.yml ${CONDA_DIR}/etc/dask.yml
+    && mv /srv/condarc.yml ${CONDA_DIR}/.condarc 
 
 EXPOSE 8888
 ENTRYPOINT ["/srv/start"]
@@ -94,7 +92,7 @@ ONBUILD RUN echo "Checking for 'apt.txt'..." \
 
 ONBUILD USER ${NB_USER}
 
-# Create "notebook" conda environment and dask labextensions
+# Create "notebook" conda environment
 #
 # note that ...bokeh/server/static doesn't exist if bokeh not in environment
 # create it so find doesn't fail

@@ -2,23 +2,23 @@ version: '3'
 
 services:
   e211book:
-    image: phaustin/e211book:sep09
+    image: phaustin/e211book:sep11
     build:
       context: e211book_image
-    container_name: e211book_sep08
+    container_name: e211book_sep11
     labels:
       - "traefik.enable=false"
       
 
   e211hub:
     build: newhub_image
-    image: phaustin/e211hub_img:sep09
-    container_name: newe211hub
+    image: phaustin/e211hub_img:sep11
+    container_name: e211hub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:e211hub.eoastest5.xyz"
+      - "traefik.frontend.rule=Host:e211hub.eoastest2.xyz"
       - "traefik.port=8000"
     restart: on-failure
     networks:

@@ -1,24 +1,21 @@
-FROM phaustin/base_image:aug07
-
-USER root
-
-RUN mkdir -p /opt
-RUN chown -R ${NB_USER} /opt
+FROM phaustin/base_image:sep11
 
 USER ${NB_USER}
 
-#COPY e211_lib/ $HOME/
-RUN mkdir -p $HOME/data
+# RUN mkdir -p ${HOME}/work/problem_solving
 
-RUN mkdir -p ${HOME}/work
+RUN echo "conda activate ${CONDA_ENV}" >> ${HOME}/.bashrc
 
-# RUN mkdir -p ${HOME}/work/data_readonly
-# RUN mkdir -p ${HOME}/work/data_share
+WORKDIR ${HOME}/work
 
+COPY jupyter_notebook_config.py /etc/jupyter/
+
+# COPY --chown=${NB_USER}:${NB_USER} problem_solving/ ./problem_solving/
+
+RUN touch version_9_11
 
 RUN echo "conda activate ${CONDA_ENV}" >> ${HOME}/.bashrc
 COPY jupyter_notebook_config.py /etc/jupyter/
 
-WORKDIR ${HOME}/work
-
 CMD ["jupyterhub-singleuser"]
+
