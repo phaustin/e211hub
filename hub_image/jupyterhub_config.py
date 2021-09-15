@@ -16,18 +16,25 @@ c.JupyterHub.hub_connect_ip = 'e211hub'
 # in it as our Hub.
 # c.DockerSpawner.image = 'phaustin/e211book:sep11'
 c.DockerSpawner.allowed_images = {'e211' : 'phaustin/e211book:sep11',
-                                  'test' : 'phaustin/graderbook:sep14'}
+                                  'test' : 'phaustin/graderbook:sep15'}
 notebook_dir = "/home/jovyan/work"
 c.DockerSpawner.notebook_dir = notebook_dir
 
 # tell the user containers to connect to our docker network
 c.DockerSpawner.network_name = 'proxy_aug07'
-c.DockerSpawner.volumes = {"e211hub-user-{username}": notebook_dir}
+c.DockerSpawner.volumes = {"graderhub-user-{username}": notebook_dir,
                         #     "/home/phil/repos/a448hub/data_readonly": 
                         #     {"bind": '/home/jovyan/work/data_readonly', "mode": "ro"},
-                        #     "/home/phil/repos/a448hub/data_share": 
-                        #     {"bind": '/home/jovyan/work/data_share', "mode": "rw"}
-                        #    }
+                          "/home/jovyan/repos/e211hub/datadir": 
+                           {"bind": '/home/jovyan/work/datadir', "mode": "rw"}
+                           }
+
+# c.DockerSpawner.volumes = {"e211hub-user-{username}": notebook_dir}
+#                         #     "/home/phil/repos/a448hub/data_readonly": 
+#                         #     {"bind": '/home/jovyan/work/data_readonly', "mode": "ro"},
+#                         #     "/home/phil/repos/a448hub/data_share": 
+#                         #     {"bind": '/home/jovyan/work/data_share', "mode": "rw"}
+#                         #    }
 
 
 # delete containers when the stop

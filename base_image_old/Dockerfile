@@ -1,12 +1,10 @@
 FROM ubuntu:20.04
-# build file for pangeo images
-
-LABEL org.opencontainers.image.source=https://github.com/pangeo-data/pangeo-docker-images
-
+# Master build file for pangeo images
+# https://github.com/pangeo-data/pangeo-docker-images/blob/master/base-image/Dockerfile
 # Run this section as root
 # try to keep conda version in sync with repo2docker
 # ========================
-ENV CONDA_VERSION=4.10.3-2 \
+ENV CONDA_VERSION=4.9.2-4 \
     CONDA_ENV=notebook \
     NB_USER=jovyan \
     NB_UID=1000 \
@@ -16,12 +14,8 @@ ENV CONDA_VERSION=4.10.3-2 \
     CONDA_DIR=/srv/conda
 
 ENV NB_PYTHON_PREFIX=${CONDA_DIR}/envs/${CONDA_ENV} \
-    DASK_ROOT_CONFIG=${CONDA_DIR}/etc \
     HOME=/home/${NB_USER} \
     PATH=${CONDA_DIR}/bin:${PATH}
-
-# required for prefect agent: https://github.com/PrefectHQ/prefect/issues/3061
-ENV DEBIAN_FRONTEND=noninteractive
 
 # Create jovyan user, permissions, add conda init to startup script
 RUN echo "Creating ${NB_USER} user..." \
@@ -30,13 +24,23 @@ RUN echo "Creating ${NB_USER} user..." \
     && echo ". ${CONDA_DIR}/etc/profile.d/conda.sh ; conda activate ${CONDA_ENV}" > /etc/profile.d/init_conda.sh \
     && chown -R ${NB_USER}:${NB_USER} /srv
 
+# COPY chown available docker>17.09
+# but env sub only works for docker>19.03 (kubernetes>1.17)
+# https://github.com/moby/moby/issues/35018
+#COPY --chown=${NB_USER}:${NB_USER} . ${HOME}
+COPY --chown=jovyan:jovyan . /srv
+
+RUN echo "add conda environment to bashrc" \
+    && cat /srv/bashrc_conda.txt >> ${HOME}/.bashrc
+
 # SEE: https://github.com/phusion/baseimage-docker/issues/58
+# and https://github.com/phusion/baseimage-docker/issues/319
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN echo "Installing Apt-get packages..." \
     && apt-get update --fix-missing \
     && apt-get install -y apt-utils 2> /dev/null \
-    && apt-get install -y wget zip tzdata \
+    && apt-get install -y wget zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 # ========================
@@ -49,10 +53,12 @@ RUN echo "Installing Miniforge..." \
     && wget --quiet ${URL} -O miniconda.sh \
     && /bin/bash miniconda.sh -u -b -p ${CONDA_DIR} \
     && rm miniconda.sh \
-    && conda install -y -c conda-forge mamba \
-    && mamba clean -afy \
+    && conda clean -afy \
     && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+
+RUN echo "Copying configuration files..." \
+    && mv /srv/condarc.yml ${CONDA_DIR}/.condarc 
 
 EXPOSE 8888
 ENTRYPOINT ["/srv/start"]
@@ -61,8 +67,7 @@ ENTRYPOINT ["/srv/start"]
 # Only run these if used as a base image
 # ----------------------
 ONBUILD USER root
-# FIXME (?): user and home folder is hardcoded for now
-# FIXME (?): this line breaks the cache of all steps below
+# hardcode for now
 ONBUILD COPY --chown=jovyan:jovyan . /home/jovyan
 
 ONBUILD RUN echo "Checking for 'binder' or '.binder' subfolder" \
@@ -85,33 +90,29 @@ ONBUILD RUN echo "Checking for 'apt.txt'..." \
         && rm -rf /var/lib/apt/lists/* \
         ; fi
 
-# Copy jupyter_notebook_config.py to /etc/jupyter
-ONBUILD RUN echo "Checking for 'jupyter_notebook_config.py'..." \
-        ; [ -d binder ] && cd binder \
-        ; [ -d .binder ] && cd .binder \
-        ; if test -f "jupyter_notebook_config.py" ; then \
-        mkdir -p /etc/jupyter \
-        && cp jupyter_notebook_config.py /etc/jupyter \
-        ; fi
-
 ONBUILD USER ${NB_USER}
 
-# Create "notebook" conda environment and dask labextensions
+# Create "notebook" conda environment
+#
+# note that ...bokeh/server/static doesn't exist if bokeh not in environment
+# create it so find doesn't fail
+#
 ONBUILD RUN echo "Checking for 'conda-linux-64.lock' or 'environment.yml'..." \
         ; [ -d binder ] && cd binder \
         ; [ -d .binder ] && cd .binder \
         ; if test -f "conda-linux-64.lock" ; then \
-        mamba create --name ${CONDA_ENV} --file conda-linux-64.lock \
+        conda create --name ${CONDA_ENV} --file conda-linux-64.lock \
         ; elif test -f "environment.yml" ; then \
-        mamba env create --name ${CONDA_ENV} -f environment.yml  \
+        conda env create --name ${CONDA_ENV} -f environment.yml  \
         ; else echo "No conda-linux-64.lock or environment.yml! *creating default env*" ; \
-        mamba create --name ${CONDA_ENV} pangeo-notebook \
+        conda create --name ${CONDA_ENV} pangeo-notebook \
         ; fi \
-        && mamba clean -yaf \
+        && conda clean -yaf \
         && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
         && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete \
-        && find ${CONDA_DIR} -follow -type f -name '*.js.map' -delete \
-        && find ${NB_PYTHON_PREFIX}/lib/python*/site-packages/bokeh/server/static -follow -type f -name '*.js' ! -name '*.min.js' -delete
+        && find ${CONDA_DIR} -follow -type f -name '*.js.map' -delete 
+#        && mkdir -p ${NB_PYTHON_PREFIX}/lib/python3/site-packages/bokeh/server/static \
+#        && find ${NB_PYTHON_PREFIX}/lib/python*/site-packages/bokeh/server/static -follow -type f -name '*.js' ! -name '*.min.js' -delete
 
 # Install pip packages
 # remove cache https://github.com/pypa/pip/pull/6391 ?
@@ -122,7 +123,7 @@ ONBUILD RUN echo "Checking for pip 'requirements.txt'..." \
         ${NB_PYTHON_PREFIX}/bin/pip install --no-cache-dir -r requirements.txt \
         ; fi
 
-# Run postBuild script within "pangeo" environment
+# Run postBuild script within ${CONDA_ENV} environment
 ONBUILD RUN echo "Checking for 'postBuild'..." \
         ; [ -d binder ] && cd binder \
         ; [ -d .binder ] && cd .binder \

@@ -2,10 +2,10 @@ version: '3'
 
 services:
   e211book:
-    image: phaustin/e211book:sep11
+    image: phaustin/e211book:sep15
     build:
       context: e211book_image
-    container_name: e211book_sep11
+    container_name: e211book_sep15
     depends_on: [base_image]
     #command: tail -F anything
     labels:
@@ -13,17 +13,26 @@ services:
 
 
   base_image:
-    image: phaustin/base_image:sep11
+    image: phaustin/base_image:sep15
     build:
       context: base_image
-    container_name: baseimage_sep11
+    container_name: baseimage_sep15
+    labels:
+      - "traefik.enable=false"
+
+
+  graderbook:
+    image: phaustin/graderbook:sep15
+    build:
+      context: grader_image
+    container_name: graderbook_sep15
     labels:
       - "traefik.enable=false"
 
 
   e211hub:
     build: hub_image
-    image: phaustin/e211hub_img:sep11
+    image: phaustin/e211hub_img:sep15
     container_name: e211hub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

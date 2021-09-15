@@ -1,0 +1,7 @@
+#!/bin/bash
+jupyter nbextension install --sys-prefix --py nbgrader --overwrite
+jupyter nbextension enable --sys-prefix --py nbgrader
+jupyter serverextension enable --sys-prefix --py nbgrader
+jupyter lab build
+
+
