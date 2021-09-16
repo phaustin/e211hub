@@ -8,6 +8,7 @@ dependencies:
   - python=3.8
   - pip
   - pillow
+  - bokeh
   - nbgitpuller>1.0
   - ghp-import
   - jupytext

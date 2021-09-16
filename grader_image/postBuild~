@@ -1,5 +1,0 @@
-#!/bin/bash
-echo "${NB_PYTHON_PREFIX}/bin"
-jupyter lab build
-
-

@@ -1,50 +1,49 @@
 version: '3'
 
 services:
+  
   e211book:
-    image: phaustin/e211book:sep15
+    image: phaustin/e211book:sep16
     build:
       context: e211book_image
-    container_name: e211book_sep15
+    container_name: e211book_sep16
     depends_on: [base_image]
-    #command: tail -F anything
     labels:
       - "traefik.enable=false"
 
 
   base_image:
-    image: phaustin/base_image:sep15
+    image: phaustin/base_image:sep16
     build:
       context: base_image
-    container_name: baseimage_sep15
+    container_name: baseimage_sep16
     labels:
       - "traefik.enable=false"
 
 
   graderbook:
-    image: phaustin/graderbook:sep15
+    image: phaustin/graderbook:sep16
     build:
       context: grader_image
-    container_name: graderbook_sep15
+    container_name: graderbook_sep16
     labels:
       - "traefik.enable=false"
 
 
   e211hub:
     build: hub_image
-    image: phaustin/e211hub_img:sep15
+    image: phaustin/e211hub_img:sep16
     container_name: e211hub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:e211hub.eoastest3.xyz"
+      - "traefik.frontend.rule=Host:e211hub.eoastest6.xyz"
       - "traefik.port=8000"
     restart: on-failure
     networks:
       - proxy_aug07
-      
-      
+
 networks:
     proxy_aug07:
       external: true

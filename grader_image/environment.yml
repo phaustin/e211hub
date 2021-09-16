@@ -7,6 +7,7 @@ dependencies:
   - git
   - python=3.8
   - pip
+  - bokeh
   - pillow
   - nbgitpuller>1.0
   - ghp-import

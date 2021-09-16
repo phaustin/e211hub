@@ -49,10 +49,16 @@ RUN echo "Installing Miniforge..." \
     && wget --quiet ${URL} -O miniconda.sh \
     && /bin/bash miniconda.sh -u -b -p ${CONDA_DIR} \
     && rm miniconda.sh \
-    && conda install -y -c conda-forge mamba \
+    && conda install -y -c conda-forge mamba bokeh \
     && mamba clean -afy \
     && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+
+COPY --chown=jovyan:jovyan . /srv
+
+RUN echo "add conda environment to bashrc" \
+    && cat /srv/bashrc_conda.txt >> ${HOME}/.bashrc
+
 
 EXPOSE 8888
 ENTRYPOINT ["/srv/start"]
@@ -107,11 +113,13 @@ ONBUILD RUN echo "Checking for 'conda-linux-64.lock' or 'environment.yml'..." \
         ; else echo "No conda-linux-64.lock or environment.yml! *creating default env*" ; \
         mamba create --name ${CONDA_ENV} pangeo-notebook \
         ; fi \
+        && mamba install --name ${CONDA_ENV} nbgitpuller git conda-lock \
         && mamba clean -yaf \
         && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
-        && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete \
-        && find ${CONDA_DIR} -follow -type f -name '*.js.map' -delete \
-        && find ${NB_PYTHON_PREFIX}/lib/python*/site-packages/bokeh/server/static -follow -type f -name '*.js' ! -name '*.min.js' -delete
+        && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+        # can't find these
+        # && find ${CONDA_DIR} -follow -type f -name '*.js.map' -delete  \
+        # && find ${NB_PYTHON_PREFIX}/lib/python*/site-packages/bokeh/server/static -follow -type f -name '*.js' ! -name '*.min.js' -delete
 
 # Install pip packages
 # remove cache https://github.com/pypa/pip/pull/6391 ?

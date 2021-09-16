@@ -41,7 +41,7 @@ users = ["e211:$2y$05$2N25nFVO13/Xxv4JUetyou5eo2xnrZ5rUHXJF0/P59gwZUGgZUdrC"]
 #Define Docker Backend Configuration                                                                                                                                                                  
 [docker]
 endpoint = "unix:///var/run/docker.sock"
-domain = "eoastest3.xyz"
+domain = "eoastest6.xyz"
 watch = true
 exposedbydefault = false
 
@@ -56,8 +56,8 @@ entryPoint = "https"
 OnHostRule = true
 
 [[acme.domains]]
-  main = "*.eoastest3.xyz"
-  sans = ["eoastest3.xyz"]
+  main = "*.eoastest6.xyz"
+  sans = ["eoastest6.xyz"]
 
 
 [acme.dnsChallenge]

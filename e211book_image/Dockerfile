@@ -1,21 +1,19 @@
-FROM phaustin/base_image:sep15
+FROM phaustin/base_image:sep16
 
 USER ${NB_USER}
 
 RUN mkdir -p ${HOME}/work
 
-RUN echo "conda activate ${CONDA_ENV}" >> ${HOME}/.bashrc
-
-WORKDIR ${HOME}/work
-
 COPY jupyter_notebook_config.py /etc/jupyter/
 
 # COPY --chown=${NB_USER}:${NB_USER} problem_solving/ ./problem_solving/
 
-RUN touch version_9_11
-
 RUN echo "conda activate ${CONDA_ENV}" >> ${HOME}/.bashrc
 COPY jupyter_notebook_config.py /etc/jupyter/
+
+WORKDIR "${HOME}"
+
+RUN touch version_9_16.txt
 
 CMD ["jupyterhub-singleuser"]
 
