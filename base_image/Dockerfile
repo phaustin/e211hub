@@ -27,7 +27,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "Creating ${NB_USER} user..." \
     && groupadd --gid ${NB_UID} ${NB_USER}  \
     && useradd --create-home --gid ${NB_UID} --no-log-init --uid ${NB_UID} ${NB_USER} \
-    && echo ". ${CONDA_DIR}/etc/profile.d/conda.sh ; conda activate ${CONDA_ENV}" > /etc/profile.d/init_conda.sh \
     && chown -R ${NB_USER}:${NB_USER} /srv
 
 # SEE: https://github.com/phusion/baseimage-docker/issues/58
@@ -56,8 +55,8 @@ RUN echo "Installing Miniforge..." \
 
 COPY --chown=jovyan:jovyan . /srv
 
-RUN echo "add conda environment to bashrc" \
-    && cat /srv/bashrc_conda.txt >> ${HOME}/.bashrc
+RUN echo "add conda environment to /etc/profile.d" \
+    && cat /srv/bashrc_conda.txt >> /etc/profile.d/init_conda.sh
 
 
 EXPOSE 8888

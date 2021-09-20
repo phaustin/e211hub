@@ -3,20 +3,20 @@ version: '3'
 services:
   
   e211book:
-    image: phaustin/e211book:sep16
+    image: phaustin/e211book:sep20
     build:
       context: e211book_image
-    container_name: e211book_sep16
+    container_name: e211book_sep20
     depends_on: [base_image]
     labels:
       - "traefik.enable=false"
 
 
   base_image:
-    image: phaustin/base_image:sep16
+    image: phaustin/base_image:sep20
     build:
       context: base_image
-    container_name: baseimage_sep16
+    container_name: baseimage_sep20
     labels:
       - "traefik.enable=false"
 

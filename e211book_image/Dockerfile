@@ -1,4 +1,4 @@
-FROM phaustin/base_image:sep16
+FROM phaustin/base_image:sep20
 
 USER ${NB_USER}
 
@@ -13,7 +13,7 @@ COPY jupyter_notebook_config.py /etc/jupyter/
 
 WORKDIR "${HOME}"
 
-RUN touch version_9_16.txt
+RUN touch version_9_20.txt
 
 CMD ["jupyterhub-singleuser"]
 
