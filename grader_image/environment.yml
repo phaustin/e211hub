@@ -11,8 +11,6 @@ dependencies:
   - pillow
   - nbgitpuller>1.0
   - ghp-import
-  - jupytext
-  - jupyter-book
   - nbgrader
   - conda-lock
   - jupyterlab

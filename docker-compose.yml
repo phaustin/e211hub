@@ -22,10 +22,10 @@ services:
 
 
   graderbook:
-    image: phaustin/graderbook:sep16
+    image: phaustin/graderbook:sep20b
     build:
       context: grader_image
-    container_name: graderbook_sep16
+    container_name: graderbook_sep20b
     labels:
       - "traefik.enable=false"
 
