@@ -38,8 +38,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:e211hub.eoastest6.xyz"
-      - "traefik.port=8000"
+      - "traefik.http.routers.jhub.rule=Host(`jupyter.phaustin.org`)"
+      - traefik.http.routers.jhub.tls=true
+      - traefik.http.routers.jhub.tls.certresolver=lets-encrypt
+      - "traefik.http.routers.jhub.service=e211hub"
+      - "traefik.http.services.e211hub.loadbalancer.server.port=8000"
+      - "traefik.http.routers.jhub.middlewares=jupyterAuth@file"
     restart: on-failure
     networks:
       - proxy_aug07
