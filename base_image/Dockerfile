@@ -9,7 +9,8 @@ LABEL org.opencontainers.image.source=https://github.com/pangeo-data/pangeo-dock
 ENV CONDA_VERSION=4.10.3-2 \
     CONDA_ENV=notebook \
     NB_USER=jovyan \
-    NB_UID=1000 \
+    NB_UID=1002 \
+    NB_GID=1004 \
     SHELL=/bin/bash \
     LANG=C.UTF-8  \
     LC_ALL=C.UTF-8 \
@@ -25,8 +26,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Create jovyan user, permissions, add conda init to startup script
 RUN echo "Creating ${NB_USER} user..." \
-    && groupadd --gid ${NB_UID} ${NB_USER}  \
-    && useradd --create-home --gid ${NB_UID} --no-log-init --uid ${NB_UID} ${NB_USER} \
+    && groupadd --gid ${NB_GID} ${NB_USER}  \
+    && useradd --create-home --gid ${NB_GID} --no-log-init --uid ${NB_UID} ${NB_USER} \
     && chown -R ${NB_USER}:${NB_USER} /srv
 
 # SEE: https://github.com/phusion/baseimage-docker/issues/58
@@ -38,6 +39,12 @@ RUN echo "Installing Apt-get packages..." \
     && apt-get install -y wget zip tzdata \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --chown=jovyan:jovyan . /srv
+
+RUN echo "add conda environment to /etc/profile.d" \
+    && cat /srv/bashrc_conda.txt >> /etc/profile.d/init_conda.sh
+
 # ========================
 
 USER ${NB_USER}
@@ -53,10 +60,7 @@ RUN echo "Installing Miniforge..." \
     && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
-COPY --chown=jovyan:jovyan . /srv
 
-RUN echo "add conda environment to /etc/profile.d" \
-    && cat /srv/bashrc_conda.txt >> /etc/profile.d/init_conda.sh
 
 
 EXPOSE 8888

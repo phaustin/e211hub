@@ -11,28 +11,26 @@ services:
     labels:
       - "traefik.enable=false"
 
+  a301book:
+    image: phaustin/a301book:dec10
+    build:
+      context: a301_image
+    container_name: a301_dec10
+    depends_on: [base_image]
+    labels:
+      - "traefik.enable=false"
 
   base_image:
-    image: phaustin/base_image:sep20
+    image: phaustin/base_image:dec11
     build:
       context: base_image
-    container_name: baseimage_sep20
+    container_name: baseimage_dec11
     labels:
       - "traefik.enable=false"
-
-
-  graderbook:
-    image: phaustin/graderbook:sep20b
-    build:
-      context: grader_image
-    container_name: graderbook_sep20b
-    labels:
-      - "traefik.enable=false"
-
 
   e211hub:
     build: hub_image
-    image: phaustin/e211hub_img:sep16
+    image: phaustin/e211hub_img:dec11
     container_name: e211hub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
