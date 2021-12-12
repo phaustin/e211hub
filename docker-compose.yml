@@ -11,6 +11,15 @@ services:
     labels:
       - "traefik.enable=false"
 
+  micro:
+    image: phaustin/micro:dec11
+    build:
+      context: micro_image
+    container_name: micro_dec11
+    labels:
+      - "traefik.enable=false"
+
+      
   a301book:
     image: phaustin/a301book:dec10
     build:
@@ -28,6 +37,15 @@ services:
     labels:
       - "traefik.enable=false"
 
+  test_image:
+    image: phaustin/test_image:dec11
+    build:
+      context: test_image
+    container_name: testimage_dec11
+    labels:
+      - "traefik.enable=false"
+
+      
   e211hub:
     build: hub_image
     image: phaustin/e211hub_img:dec11
@@ -36,12 +54,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jhub.rule=Host(`jupyter.phaustin.org`)"
+      - "traefik.http.routers.jhub.rule=Host(`jupyter.eoastest.xyz`)"
       - traefik.http.routers.jhub.tls=true
       - traefik.http.routers.jhub.tls.certresolver=lets-encrypt
       - "traefik.http.routers.jhub.service=e211hub"
       - "traefik.http.services.e211hub.loadbalancer.server.port=8000"
-      - "traefik.http.routers.jhub.middlewares=jupyterAuth@file"
+      - "traefik.http.routers.jhub.middlewares=a448Auth@file"
     restart: on-failure
     networks:
       - proxy_aug07

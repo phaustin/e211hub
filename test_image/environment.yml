@@ -1,0 +1,10 @@
+name: mainsite
+channels:
+  - eoas_ubc
+  - conda-forge
+  - defaults
+dependencies:
+  - git
+  - python=3.8
+  - jupyterhub=1.4
+# conda-lock --file environment.yml -p linux-64
