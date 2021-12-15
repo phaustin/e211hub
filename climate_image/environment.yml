@@ -1,0 +1,45 @@
+name: mainsite
+channels:
+  - eoas_ubc
+  - conda-forge
+  - defaults
+dependencies:
+  - git
+  - python=3.8
+  - numpy
+  - scipy
+  - matplotlib
+  - netcdf4
+  - pyhdf
+  - hdf4
+  - h5py
+  - Pillow
+  - pooch
+  - jupytext
+  - cartopy
+  - pyresample
+  - earthpy
+  - rasterio
+  - fiona
+  - pandas
+  - pytest
+  - jupyterlab>3.2
+  - shapely
+  - requests
+  - bs4
+  - geopandas
+  - pip
+  - pillow
+  - bokeh
+  - gcsfs
+  - nbgitpuller>1.0
+  - ghp-import
+  - jupytext
+  - conda-lock
+  - jupyterhub=1.4
+  - fsspec
+  - cmocean
+  - intake-esm
+  - xarray
+  - mamba
+# conda-lock --file environment.yml -p linux-64
