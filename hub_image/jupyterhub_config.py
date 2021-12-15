@@ -30,7 +30,9 @@ c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir,
                           "/home/jovyan/repos/e211hub/data_share": 
                            {"bind": '/home/jovyan/work/data_share', "mode": "rw"},
                           "/home/jovyan/repos/e211hub/sat_data": 
-                           {"bind": '/home/jovyan/work/sat_data', "mode": "ro"}
+                           {"bind": '/home/jovyan/work/sat_data', "mode": "ro"},
+                          "/home/jovyan/repos/e211hub/climate_data": 
+                           {"bind": '/home/jovyan/work/climate_data', "mode": "ro"}
                            }
 # c.DockerSpawner.volumes = {"e211hub-user-{username}": notebook_dir}
 #                         #     "/home/phil/repos/a448hub/data_readonly": 

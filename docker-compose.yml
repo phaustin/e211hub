@@ -58,7 +58,7 @@ services:
       
   e211hub:
     build: hub_image
-    image: phaustin/e211hub_img:dec11
+    image: phaustin/e211hub_img:dec14
     container_name: e211hub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
