@@ -1,3 +1,18 @@
+---
+jupytext:
+  cell_metadata_filter: -all
+  notebook_metadata_filter: -all
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.4
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
 # Model Info
 ## General
 - [abrupt-4xCO2](https://view.es-doc.org/?renderMethod=name&project=cmip6&type=cim.2.designing.NumericalExperiment&client=esdoc-url-rewrite&name=abrupt-4xco2) should start at 1850

@@ -78,7 +78,7 @@ def save_model(mod_id, exp_id, lev_conversion, slice_time):
     if slice_time:
         ds_subset = ds_subset.isel(time=slice(0, 6000))
 
-    #print(ds_subset.cl.attrs)
+    print(ds_subset.lon.attrs)
 
 
     

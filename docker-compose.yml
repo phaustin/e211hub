@@ -29,16 +29,6 @@ services:
     labels:
       - "traefik.enable=false"
 
-      
-  a301book:
-    image: phaustin/a301book:dec10
-    build:
-      context: a301_image
-    container_name: a301_dec10
-    depends_on: [base_image]
-    labels:
-      - "traefik.enable=false"
-
   base_image:
     image: phaustin/base_image:dec11
     build:
